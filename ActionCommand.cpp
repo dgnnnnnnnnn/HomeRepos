@@ -12,7 +12,6 @@ using namespace std;
 #define RIGHT 77
 
 
-// inputkey(char) >> command(string) >> inputBuffer(array)
 int main() {
     // char형은 키보드 방향키같은 특문을 입력받지 못함
     vector<string> inputBuffer;
@@ -122,16 +121,6 @@ int main() {
     }
     return 0;
 }
-
-/*
-   WinMain 진입점 함수
-   int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
-   * hInstance : 인스턴스에 대한 핸들 이거나 모듈에 대한 핸들입니다.
-                 운영 체제는 이 값을 사용하여 메모리에 로드될 때 실행 파일 또는 EXE를 식별합니다.
-   * hPrevInstance : 의미 X, 16비트 Windows에서 사용되었지만 이제는 항상 0입니다.
-   * pCmdLine : 명령줄 인수(main 함수에 전달 할 인수) 가 유니코드 문자열로 포함
-   * nCmdShow : 기본 애플리케이션 창 크기 조절
-*/
 
 /*
 * 키보드를 입력한 순간부터 0.3초마다(300ms) 동안 입력을 쌓은 후에
