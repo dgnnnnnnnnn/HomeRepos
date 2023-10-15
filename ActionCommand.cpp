@@ -2,11 +2,9 @@
 #include <conio.h>
 #include <vector>
 #include <chrono>
-#include <thread>
 #include <string>
 #include <regex>
 using namespace std;
-vector<char> inputBuffer;
 
 #define UP 72
 #define DOWN 80
