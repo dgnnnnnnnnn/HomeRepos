@@ -21,7 +21,7 @@ POINT endPointBox = { 0 };
 POINT startPointCircle = { 0 };
 POINT endPointCircle = { 0 };
 
-POINT startPointLion = { 0 };  // Lion¿ë Point
+POINT startPointLion = { 0 };  // Lionìš© Point
 POINT endPointLion = { 0 };
 
 POINT startPointCube = { 0 };
@@ -37,13 +37,13 @@ int emx, emy;
 int mmx, mmy;
 int bx, by;
 int bbx, bby;
-int radius;  // ¿øÀÇ ¹İÁö¸§
+int radius;  // ì›ì˜ ë°˜ì§€ë¦„
 
 RECT drawArea;
 
-// ±âº» Å©±â ¹× À§Ä¡ ¼³Á¤
-const int DEFAULT_FACE_WIDTH = 100; // ¾ó±¼ ±âº» ³Êºñ
-const int DEFAULT_FACE_HEIGHT = 100; // ¾ó±¼ ±âº» ³ôÀÌ
+// ê¸°ë³¸ í¬ê¸° ë° ìœ„ì¹˜ ì„¤ì •
+const int DEFAULT_FACE_WIDTH = 100; // ì–¼êµ´ ê¸°ë³¸ ë„ˆë¹„
+const int DEFAULT_FACE_HEIGHT = 100; // ì–¼êµ´ ê¸°ë³¸ ë†’ì´
 
 const int DEFAULT_EAR1_WIDTH = 40;
 const int DEFAULT_EAR1_HEIGHT = 40;
@@ -79,14 +79,14 @@ const int DEFAULT_NOSE2_Y = 55;
 
 
 
-bool InRect(INT mmx, INT mmy, RECT rect1)    // ÇöÀçÄ¿¼­À§Ä¡, ÁöÁ¤ÇÒ »ç°¢Çü ¿µ¿ª
+bool InRect(INT mmx, INT mmy, RECT rect1)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚¬ê°í˜• ì˜ì—­
 {
 	if ((mmx > rect1.left && mmx < rect1.right) &&
 		(mmy > rect1.top && mmy < rect1.bottom))
 	{
-		return 1; // µµÇü°ú °ãÄ§
+		return 1; // ë„í˜•ê³¼ ê²¹ì¹¨
 	}
-	return 0; // µÎ RECT°¡ °ãÄ¡Áö ¾ÊÀ½
+	return 0; // ë‘ RECTê°€ ê²¹ì¹˜ì§€ ì•ŠìŒ
 }
 
 BOOL InCircle(int x, int y, POINT center, int radius) {
@@ -96,25 +96,25 @@ BOOL InCircle(int x, int y, POINT center, int radius) {
 }
 
 
-bool InDrawArea(INT x, INT y, RECT rect2)    // ÇöÀçÄ¿¼­À§Ä¡, ÁöÁ¤ÇÒ »ç°¢Çü ¿µ¿ª
+bool InDrawArea(INT x, INT y, RECT rect2)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚¬ê°í˜• ì˜ì—­
 {
 	if ((x > rect2.left && x < rect2.right) &&
 		(y > rect2.top && y < rect2.bottom))
 	{
-		return 1; // µµÇü°ú °ãÄ§
+		return 1; // ë„í˜•ê³¼ ê²¹ì¹¨
 	}
-	return 0; // µÎ RECT°¡ °ãÄ¡Áö ¾ÊÀ½
+	return 0; // ë‘ RECTê°€ ê²¹ì¹˜ì§€ ì•ŠìŒ
 }
 
 
 void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 {
 	
-	// ½ºÄÉÀÏ¸µ ºñÀ² °è»ê
+	// ìŠ¤ì¼€ì¼ë§ ë¹„ìœ¨ ê³„ì‚°
 	float scaleX = (float)(endPoint.x - startPoint.x) / DEFAULT_FACE_WIDTH;
 	float scaleY = (float)(endPoint.y - startPoint.y) / DEFAULT_FACE_HEIGHT;
 
-	// Á¶Á¤µÈ Å©±â ¹× À§Ä¡·Î ±×¸®±â : ¾ó±¼, ±Í 2°³
+	// ì¡°ì •ëœ í¬ê¸° ë° ìœ„ì¹˜ë¡œ ê·¸ë¦¬ê¸° : ì–¼êµ´, ê·€ 2ê°œ
 	HBRUSH Lion1 = CreateSolidBrush(RGB(255, 200, 15));
 	HBRUSH OldBrush1 = (HBRUSH)SelectObject(hdc, Lion1);
 	Ellipse(hdc, startPoint.x + DEFAULT_EAR1_X * scaleX,
@@ -133,7 +133,7 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	SelectObject(hdc, OldBrush1);
 	DeleteObject(Lion1);
 
-	// ´« 2°³
+	// ëˆˆ 2ê°œ
 	HBRUSH Lion2 = CreateSolidBrush(RGB(0, 0 ,0));
 	HBRUSH OldBrush2 = (HBRUSH)SelectObject(hdc, Lion2);
 	Ellipse(hdc, startPoint.x + DEFAULT_EYE1_X * scaleX,
@@ -148,7 +148,7 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	SelectObject(hdc, OldBrush2);
 	DeleteObject(Lion2);
 
-	// ÄÚ 2°³
+	// ì½” 2ê°œ
 	Ellipse(hdc, startPoint.x + DEFAULT_NOSE1_X * scaleX,
 		startPoint.y + DEFAULT_NOSE1_Y * scaleY,
 		startPoint.x + (DEFAULT_NOSE1_X + DEFAULT_NOSE1_WIDTH) * scaleX,
@@ -163,19 +163,19 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	int centerY = (startPoint.y + endPoint.y) / 2;
 	int radius = abs(endPoint.x - startPoint.x) / 2;
 
-	// ´«½çÀÇ ±æÀÌ¿Í µÎ²²¸¦ ¼³Á¤ (ÀÌ °ªÀ» Á¶Á¤ÇÏ¿© ´«½çÀÇ Å©±â¸¦ º¯°æÇÒ ¼ö ÀÖ½À´Ï´Ù)
-	int eyebrowLength = radius * 0.35; // ¿¹: ¹İÁö¸§ÀÇ 30%¸¸Å­ÀÇ ±æÀÌ
-	int eyebrowThickness = radius * 0.03; // ¿¹: ¹İÁö¸§ÀÇ 10%¸¸Å­ÀÇ µÎ²²
+	// ëˆˆì¹ì˜ ê¸¸ì´ì™€ ë‘ê»˜ë¥¼ ì„¤ì • (ì´ ê°’ì„ ì¡°ì •í•˜ì—¬ ëˆˆì¹ì˜ í¬ê¸°ë¥¼ ë³€ê²½í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤)
+	int eyebrowLength = radius * 0.35; // ì˜ˆ: ë°˜ì§€ë¦„ì˜ 30%ë§Œí¼ì˜ ê¸¸ì´
+	int eyebrowThickness = radius * 0.03; // ì˜ˆ: ë°˜ì§€ë¦„ì˜ 10%ë§Œí¼ì˜ ë‘ê»˜
 
-	// ¿ŞÂÊ ´«½çÀÇ ½ÃÀÛÁ¡°ú ³¡Á¡ °è»ê
+	// ì™¼ìª½ ëˆˆì¹ì˜ ì‹œì‘ì ê³¼ ëì  ê³„ì‚°
 	POINT leftEyebrowStart = { centerX - radius * 0.5, centerY - radius * 0.3 };
 	POINT leftEyebrowEnd = { leftEyebrowStart.x + eyebrowLength, leftEyebrowStart.y - eyebrowThickness };
 
-	// ¿À¸¥ÂÊ ´«½çÀÇ ½ÃÀÛÁ¡°ú ³¡Á¡ °è»ê
+	// ì˜¤ë¥¸ìª½ ëˆˆì¹ì˜ ì‹œì‘ì ê³¼ ëì  ê³„ì‚°
 	POINT rightEyebrowStart = { centerX + radius * 0.5, centerY - radius * 0.3 };
 	POINT rightEyebrowEnd = { rightEyebrowStart.x - eyebrowLength, rightEyebrowStart.y - eyebrowThickness };
 
-	// ´«½ç ±×¸®±â
+	// ëˆˆì¹ ê·¸ë¦¬ê¸°
 	MoveToEx(hdc, leftEyebrowStart.x, leftEyebrowStart.y, NULL);
 	LineTo(hdc, leftEyebrowEnd.x, leftEyebrowEnd.y);
 
@@ -246,7 +246,7 @@ void DrawShape(HWND hwnd, HDC hdc) {
 	}
 }
 
-// À©µµ¿ìÀÇ ÀÌº¥Æ®¸¦ Ã³¸®ÇÏ´Â Äİ¹é(Callback) ÇÔ¼ö.
+// ìœˆë„ìš°ì˜ ì´ë²¤íŠ¸ë¥¼ ì²˜ë¦¬í•˜ëŠ” ì½œë°±(Callback) í•¨ìˆ˜.
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	SetTimer(hwnd, 1, 100, NULL);
@@ -254,7 +254,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hwnd, &ps);
 
-	switch (uMsg)         // window message Á¾·ùº° ¼öÇà
+	switch (uMsg)         // window message ì¢…ë¥˜ë³„ ìˆ˜í–‰
 	{
 
 
@@ -300,38 +300,38 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case WM_TIMER:   // º¸³ëº¸³ë ´« µ¿Àû º¯È­
+	case WM_TIMER:   // ë³´ë…¸ë³´ë…¸ ëˆˆ ë™ì  ë³€í™”
 		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-			// ½ºÆäÀÌ½º¹Ù°¡ ´­·ÁÁ® ÀÖÀ» ¶§
+			// ìŠ¤í˜ì´ìŠ¤ë°”ê°€ ëˆŒë ¤ì ¸ ìˆì„ ë•Œ
 			BonobonoSwitch = true;
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		else {
-			// ½ºÆäÀÌ½º¹Ù°¡ ´­·ÁÁ® ÀÖÁö ¾ÊÀ» ¶§
+			// ìŠ¤í˜ì´ìŠ¤ë°”ê°€ ëˆŒë ¤ì ¸ ìˆì§€ ì•Šì„ ë•Œ
 			BonobonoSwitch = false;
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		break;
 
 
-	//case WM_KEYDOWN:     Æó±â! BeginPaint¿¡¼­ keydownÀ» ¹Ş¾Æ¿À±â ¾î·Á¿ò
+	//case WM_KEYDOWN:     íê¸°! BeginPaintì—ì„œ keydownì„ ë°›ì•„ì˜¤ê¸° ì–´ë ¤ì›€
 	//	// OutputDebugString(L"WM_KEYDOWN received\n");
 	//	if (wParam == VK_SPACE) {
 	//		BonobonoSwitch = true;
-	//		InvalidateRect(hwnd, NULL, TRUE); // È­¸éÀ» ´Ù½Ã ±×¸®µµ·Ï ¿äÃ»
+	//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
 	//	}
 	//	break;
 
 	//case WM_KEYUP:
 	//	if (wParam == VK_SPACE) {
 	//		BonobonoSwitch = false;
-	//		InvalidateRect(hwnd, NULL, TRUE); // È­¸éÀ» ´Ù½Ã ±×¸®µµ·Ï ¿äÃ»
+	//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
 	//	}
 	//	break;
 
-	case WM_LBUTTONDOWN:  // ¸¶¿ì½º ¿ŞÂÊ Å¬¸¯½Ã
+	case WM_LBUTTONDOWN:  // ë§ˆìš°ìŠ¤ ì™¼ìª½ í´ë¦­ì‹œ
 	{
-		///** »ç°¢Çü ±×¸®±â
+		///** ì‚¬ê°í˜• ê·¸ë¦¬ê¸°
 		if (isMouseOnDrawingBox && isDrawingBox) {  // Cube
 			isMouseLButtonPressed = 1;
 
@@ -342,14 +342,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 		}
-		///** ¿ø ±×¸®±â
+		///** ì› ê·¸ë¦¬ê¸°
 		if (isMouseOnDrawingBox && isDrawingCircle) {
 			startPointCircle = { 0 };
 			endPointCircle = { 0 };
 
 			startPointCircle.x = LOWORD(lParam);
 			startPointCircle.y = HIWORD(lParam);
-			endPointCircle.x = startPointCircle.x;   // ³¡Á¡ ÃÊ±âÈ­(¾øÀ» ½Ã ´Ù½Ã ±×¸± ¶§ ±âÁ¸ ³¡Á¡°ªÀÌ »ç¿ëµÇ´Â ¿À·ù)
+			endPointCircle.x = startPointCircle.x;   // ëì  ì´ˆê¸°í™”(ì—†ì„ ì‹œ ë‹¤ì‹œ ê·¸ë¦´ ë•Œ ê¸°ì¡´ ëì ê°’ì´ ì‚¬ìš©ë˜ëŠ” ì˜¤ë¥˜)
 			endPointCircle.y = startPointCircle.y;
 
 			isMouseLButtonPressed = 1;
@@ -365,7 +365,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 
-	case WM_RBUTTONDOWN: // ¸¶¿ì½º ¿ìÅ¬¸¯ ½ÃÀÛ
+	case WM_RBUTTONDOWN: // ë§ˆìš°ìŠ¤ ìš°í´ë¦­ ì‹œì‘
 	{
 		if (isMouseOnDrawingBox && isDrawingBox) {
 
@@ -378,19 +378,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			isMouseRButtonPressed = 1;
 
 			if (InRect(mmx, mmy, rect)) {
-				//»ç°¢ÇüÀÇ ¿µ¿ª³»¿¡ ÀÖ´Ù¸é
+				//ì‚¬ê°í˜•ì˜ ì˜ì—­ë‚´ì— ìˆë‹¤ë©´
 				isMouseRButtonPressed = 1;
 			}
 			// InvalidateRect(hwnd, NULL, TRUE);
 		}
 
 		if (isMouseOnDrawingBox && isDrawingCircle) {
-			// Circle ¿ìÅ¬¸¯ 
+			// Circle ìš°í´ë¦­ 
 			mmx = mmx = 0;
 			mmx = mx = LOWORD(lParam);
 			mmy = my = HIWORD(lParam);
 
-			if (InCircle(mmx, mmy, startPointCircle, radius)) { // ¿ìÅ¬¸¯ÀÌ ¿ø ³»ºÎ¿¡¼­ ¹ß»ıÇÑ °æ¿ì
+			if (InCircle(mmx, mmy, startPointCircle, radius)) { // ìš°í´ë¦­ì´ ì› ë‚´ë¶€ì—ì„œ ë°œìƒí•œ ê²½ìš°
 				isMouseRButtonPressed = 1;
 			}
 		}
@@ -415,7 +415,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			endPointLion.x = LOWORD(lParam);
 			endPointLion.y = HIWORD(lParam);
 
-			// µå·¡±×°¡ ¿Ï·áµÇ¾úÀ¸¹Ç·Î È­¸éÀ» ´Ù½Ã ±×¸®µµ·Ï ¿äÃ»
+			// ë“œë˜ê·¸ê°€ ì™„ë£Œë˜ì—ˆìœ¼ë¯€ë¡œ í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
 			// InvalidateRect(hwnd, NULL, TRUE);
 		}
 
@@ -423,7 +423,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//	endPointCube.x = LOWORD(lParam);
 		//	endPointCube.y = HIWORD(lParam);
 
-		//	// µå·¡±×°¡ ¿Ï·áµÇ¾úÀ¸¹Ç·Î È­¸éÀ» ´Ù½Ã ±×¸®µµ·Ï ¿äÃ»
+		//	// ë“œë˜ê·¸ê°€ ì™„ë£Œë˜ì—ˆìœ¼ë¯€ë¡œ í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
 		//	// InvalidateRect(hwnd, NULL, TRUE);
 		//}
 		isMouseLButtonPressed = 0;
@@ -437,13 +437,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 	{
 
-		if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {  // ¿ìÅ¬¸¯ move ÀÌº¥Æ®
+		if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {  // ìš°í´ë¦­ move ì´ë²¤íŠ¸
 			bx = LOWORD(lParam);
 			by = HIWORD(lParam);
 
 			int dx = bx - bbx;
 			int dy = by - bby;
-			bbx = bx;  // ÃÊ±âÈ­°¡ ¾øÀ¸¸é Ã¹ rButtonDown¿¡¼­ ¼³Á¤ÇÑ bbx°ªÀ» °è¼Ó °¡Á®¿À°Ô µÊ!
+			bbx = bx;  // ì´ˆê¸°í™”ê°€ ì—†ìœ¼ë©´ ì²« rButtonDownì—ì„œ ì„¤ì •í•œ bbxê°’ì„ ê³„ì† ê°€ì ¸ì˜¤ê²Œ ë¨!
 			bby = by;
 
 	
@@ -455,7 +455,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				endPointBox.x += dx;
 				endPointBox.y += dy;
 
-				InvalidateRect(hwnd, NULL, TRUE); // Ã¢À» ´Ù½Ã ±×¸³´Ï´Ù.
+				InvalidateRect(hwnd, NULL, TRUE); // ì°½ì„ ë‹¤ì‹œ ê·¸ë¦½ë‹ˆë‹¤.
 
 				/*startPointBox.x = bx;
 				startPointBox.y = by;*/
@@ -463,43 +463,43 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCircle) {
 			int currentX = LOWORD(lParam);
-			int dx = currentX - mmx; // µå·¡±×·Î ÀÌµ¿ÇÑ °Å¸®( Áö±İÀ§Ä¡ - Ã³À½À§Ä¡ )
+			int dx = currentX - mmx; // ë“œë˜ê·¸ë¡œ ì´ë™í•œ ê±°ë¦¬( ì§€ê¸ˆìœ„ì¹˜ - ì²˜ìŒìœ„ì¹˜ )
 
-			// ¿øÀÇ Å©±â¸¦ Á¶Àı. 100px´ç 2¹è/0.5¹è Áõ°¨
+			// ì›ì˜ í¬ê¸°ë¥¼ ì¡°ì ˆ. 100pxë‹¹ 2ë°°/0.5ë°° ì¦ê°
 			if (dx > 0) {
 				double factor = 1.0 + dx / 100.0;
-				radius *= factor * factor;  // 100px ÀÌµ¿½Ã 2¹è Áõ°¡
+				radius *= factor * factor;  // 100px ì´ë™ì‹œ 2ë°° ì¦ê°€
 			}
 			else if (dx < 0) {
-				radius *= (1 - abs(dx) / 200.0); // 100px ÀÌµ¿½Ã 0.5¹è °¨¼Ò
+				radius *= (1 - abs(dx) / 200.0); // 100px ì´ë™ì‹œ 0.5ë°° ê°ì†Œ
 			}
 
-			// ¿øÀÇ Å©±â°¡ ³Ê¹« ÀÛ¾ÆÁö´Â °ÍÀ» ¹æÁö
+			// ì›ì˜ í¬ê¸°ê°€ ë„ˆë¬´ ì‘ì•„ì§€ëŠ” ê²ƒì„ ë°©ì§€
 			if (radius < 10) radius = 10;
 
-			mmx = currentX; // ÇöÀç À§Ä¡ ¾÷µ¥ÀÌÆ®
-			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT È£Ãâ
+			mmx = currentX; // í˜„ì¬ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
 
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
 			endPointBox.x = LOWORD(lParam);
 			endPointBox.y = HIWORD(lParam);
-			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT È£Ãâ
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCircle) {
 			endPointCircle.x = LOWORD(lParam);
 			endPointCircle.y = HIWORD(lParam);
-			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT È£Ãâ
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingLion) {
 			endPointLion.x = LOWORD(lParam);
 			endPointLion.y = HIWORD(lParam);
-			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT È£Ãâ
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
 
 
 		
-		hdc = (HDC)wParam;   // ÀüÃ¼ gui RECTÀÇ Å©±â¸¦ °¡Á®¿È
+		hdc = (HDC)wParam;   // ì „ì²´ gui RECTì˜ í¬ê¸°ë¥¼ ê°€ì ¸ì˜´
 		RECT rect;
 		GetClientRect(hwnd, &rect);
 
@@ -510,20 +510,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		rect.bottom - 8
 		};
 
-		POINT pt;  // drawArea Ã¼Å©¿ë ¸¶¿ì½º ÁÂÇ¥
+		POINT pt;  // drawArea ì²´í¬ìš© ë§ˆìš°ìŠ¤ ì¢Œí‘œ
 		pt.x = LOWORD(lParam);
 		pt.y = HIWORD(lParam);
 
 		if (PtInRect(&drawArea, pt))
 		{
-			// ¸¶¿ì½ºÀÇ À§Ä¡°¡ »ç°¢Çü ¾È¿¡ ÀÖÀ¸¸é Ä¿¼­ÀÇ ¸ğ¾çÀ» +(CROSS) ¸ğ¾çÀ¸·Î º¯°æ
+			// ë§ˆìš°ìŠ¤ì˜ ìœ„ì¹˜ê°€ ì‚¬ê°í˜• ì•ˆì— ìˆìœ¼ë©´ ì»¤ì„œì˜ ëª¨ì–‘ì„ +(CROSS) ëª¨ì–‘ìœ¼ë¡œ ë³€ê²½
 			isMouseOnDrawingBox = 1;
 			SetCursor(LoadCursor(NULL, IDC_CROSS));
 		}
 		else
 		{
 			isMouseOnDrawingBox = 0;
-			// ¸¶¿ì½ºÀÇ À§Ä¡°¡ »ç°¢Çü ¾È¿¡ ÀÖÁö ¾ÊÀ¸¸é ±âº» Ä¿¼­ ¸ğ¾çÀ¸·Î º¯°æ
+			// ë§ˆìš°ìŠ¤ì˜ ìœ„ì¹˜ê°€ ì‚¬ê°í˜• ì•ˆì— ìˆì§€ ì•Šìœ¼ë©´ ê¸°ë³¸ ì»¤ì„œ ëª¨ì–‘ìœ¼ë¡œ ë³€ê²½
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
 		}
 
@@ -532,9 +532,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
-		// À©µµ¿ìÀÇ ±×·¡ÇÈ ÄÁÅØ½ºÆ®¸¦ ¾ò°í, ±×¸²À» ±×¸± ¼ö ÀÖ°Ô ÇÔ
-		// È­¸éÀÌ »õ·Î°íÄ§ µÉ ¶§¸¶´Ù Áö¿ì°³Áú
-		HBRUSH hBrush_eraser = CreateSolidBrush(RGB(255, 255, 255)); // Áö¿ì°³
+		// ìœˆë„ìš°ì˜ ê·¸ë˜í”½ ì»¨í…ìŠ¤íŠ¸ë¥¼ ì–»ê³ , ê·¸ë¦¼ì„ ê·¸ë¦´ ìˆ˜ ìˆê²Œ í•¨
+		// í™”ë©´ì´ ìƒˆë¡œê³ ì¹¨ ë  ë•Œë§ˆë‹¤ ì§€ìš°ê°œì§ˆ
+		HBRUSH hBrush_eraser = CreateSolidBrush(RGB(255, 255, 255)); // ì§€ìš°ê°œ
 
 		RECT rect_eraser;
 		GetClientRect(hwnd, &rect_eraser);
@@ -550,12 +550,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCircle)
 		{
-			/* ¿øÀ» Ã¤¿ì·Á¸é, Ellipse() ÇÔ¼ö¸¦ »ç¿ëÇÒ ¶§ Ã¤¿ì±â¸¦ ¿øÇÏ´Â ºê·¯½Ã¸¦ µğ¹ÙÀÌ½º ÄÁÅØ½ºÆ® (DC)¿¡ ¼±ÅÃ */
-			HBRUSH hBrushCircle = CreateSolidBrush(RGB(255, 216, 190)); // ÇÎÅ© ºê·¯½Ã »ı¼º
+			/* ì›ì„ ì±„ìš°ë ¤ë©´, Ellipse() í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•  ë•Œ ì±„ìš°ê¸°ë¥¼ ì›í•˜ëŠ” ë¸ŒëŸ¬ì‹œë¥¼ ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸ (DC)ì— ì„ íƒ */
+			HBRUSH hBrushCircle = CreateSolidBrush(RGB(255, 216, 190)); // í•‘í¬ ë¸ŒëŸ¬ì‹œ ìƒì„±
 			HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrushCircle);
 
-			HPEN hTransparentPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0)); // Åõ¸íÇÑ Ææ »ı¼º
-			HPEN hOldPen = (HPEN)SelectObject(hdc, hTransparentPen); // Åõ¸íÇÑ ÆæÀ» µğ¹ÙÀÌ½º ÄÁÅØ½ºÆ®¿¡ ¼±ÅÃ
+			HPEN hTransparentPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0)); // íˆ¬ëª…í•œ íœ ìƒì„±
+			HPEN hOldPen = (HPEN)SelectObject(hdc, hTransparentPen); // íˆ¬ëª…í•œ íœì„ ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸ì— ì„ íƒ
 
 
 			radius = sqrt(pow(endPointCircle.x - startPointCircle.x, 2)
@@ -574,15 +574,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
 
-			// ÇöÀç »óÅÂ¿¡ µû¶ó µµÇüÀ» ±×¸± ¼ö ÀÖ½À´Ï´Ù.
+			// í˜„ì¬ ìƒíƒœì— ë”°ë¼ ë„í˜•ì„ ê·¸ë¦´ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
 			DrawShape(hwnd, hdc);
 		}
 		
 		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCircle) {
 			HBRUSH hBrushCircle = CreateSolidBrush(RGB(255, 216, 190));
 			HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrushCircle);
-			HPEN hTransparentPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0)); // Åõ¸íÇÑ Ææ »ı¼º
-			HPEN hOldPen = (HPEN)SelectObject(hdc, hTransparentPen); // Åõ¸íÇÑ ÆæÀ» µğ¹ÙÀÌ½º ÄÁÅØ½ºÆ®¿¡ ¼±ÅÃ
+			HPEN hTransparentPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0)); // íˆ¬ëª…í•œ íœ ìƒì„±
+			HPEN hOldPen = (HPEN)SelectObject(hdc, hTransparentPen); // íˆ¬ëª…í•œ íœì„ ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸ì— ì„ íƒ
 
 			SelectObject(hdc, hBrushCircle);
 
@@ -595,7 +595,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(hBrushCircle);
 		}
 
-		// º¸³ëº¸³ë
+		// ë³´ë…¸ë³´ë…¸
 		else if (isDrawingBonobono) {  
 			HBRUSH Bono1 = CreateSolidBrush(RGB(127, 200, 255));
 			HBRUSH OldBrush1 = (HBRUSH)SelectObject(hdc, Bono1);  
@@ -605,7 +605,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 
-			// ÀÔ
+			// ì…
 			HBRUSH Bono2 = CreateSolidBrush(RGB(255, 150, 255));
 			HBRUSH OldBrush2 = (HBRUSH)SelectObject(hdc, Bono2);
 			Ellipse(hdc, 381, 222, 411, 292);
@@ -623,7 +623,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			MoveToEx(hdc, 425, 249, NULL);
 			LineTo(hdc, 450, 255);
 
-			// ÄÚ, ¾çÂÊ ´«
+			// ì½”, ì–‘ìª½ ëˆˆ
 			HBRUSH Bono3 = CreateSolidBrush(RGB(0, 0, 0));
 			HBRUSH OldBrush3 = (HBRUSH)SelectObject(hdc, Bono3);
 			Ellipse(hdc, 384, 217, 412, 242);
@@ -644,8 +644,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				Ellipse(hdc, 311, 216, 323, 235);
 				Ellipse(hdc, 480, 216, 492, 235);
 
+				HBRUSH Bono4 = CreateSolidBrush(RGB(255, 255, 255));
+				HBRUSH OldBrush4 = (HBRUSH)SelectObject(hdc, Bono4);
 				Ellipse(hdc, 314, 222, 320, 228);
 				Ellipse(hdc, 483, 222, 489, 228);
+				SelectObject(hdc, OldBrush4);
+				DeleteObject(Bono4);
 			}
 			SelectObject(hdc, OldBrush3);
 			DeleteObject(Bono3);
@@ -659,7 +663,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 
 
-		else {   // È­¸é ÃÊ±âÈ­(ÇöÀç´Â ¹öÆ°Å¬¸¯½Ã, µµÇüÀÌ ¿ìÅ¬¸¯ ÀÌµ¿½Ã µå·ÎÀ×¿µ¿ªÀ» ¹ş¾î³¯¶§ »ç¿ë Áß)
+		else {   // í™”ë©´ ì´ˆê¸°í™”(í˜„ì¬ëŠ” ë²„íŠ¼í´ë¦­ì‹œ, ë„í˜•ì´ ìš°í´ë¦­ ì´ë™ì‹œ ë“œë¡œì‰ì˜ì—­ì„ ë²—ì–´ë‚ ë•Œ ì‚¬ìš© ì¤‘)
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
 
@@ -674,31 +678,31 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 		PostQuitMessage(0);
-		FreeConsole();  // GUI¸¦ ´İÀ¸¸é cmdÃ¢µµ °°ÀÌ Á¾·á
-		ExitProcess(0); // ÀÜ¿© ÇÁ·Î¼¼½ºµµ Á¾·áÇÕ´Ï´Ù.
+		FreeConsole();  // GUIë¥¼ ë‹«ìœ¼ë©´ cmdì°½ë„ ê°™ì´ ì¢…ë£Œ
+		ExitProcess(0); // ì”ì—¬ í”„ë¡œì„¸ìŠ¤ë„ ì¢…ë£Œí•©ë‹ˆë‹¤.
 	}
 	break;
 
-	case WM_GETMINMAXINFO:  // È®´ëÃà¼Ò ºÒ°¡
+	case WM_GETMINMAXINFO:  // í™•ëŒ€ì¶•ì†Œ ë¶ˆê°€
 	{
 		MINMAXINFO* pMinMaxInfo = (MINMAXINFO*)lParam;
-		pMinMaxInfo->ptMinTrackSize.x = 800; // ÃÖ¼Ò °¡·Î Å©±â
-		pMinMaxInfo->ptMinTrackSize.y = 480; // ÃÖ¼Ò ¼¼·Î Å©±â
-		pMinMaxInfo->ptMaxTrackSize.x = 800; // ÃÖ´ë °¡·Î Å©±â
-		pMinMaxInfo->ptMaxTrackSize.y = 480; // ÃÖ´ë ¼¼·Î Å©±â
+		pMinMaxInfo->ptMinTrackSize.x = 800; // ìµœì†Œ ê°€ë¡œ í¬ê¸°
+		pMinMaxInfo->ptMinTrackSize.y = 480; // ìµœì†Œ ì„¸ë¡œ í¬ê¸°
+		pMinMaxInfo->ptMaxTrackSize.x = 800; // ìµœëŒ€ ê°€ë¡œ í¬ê¸°
+		pMinMaxInfo->ptMaxTrackSize.y = 480; // ìµœëŒ€ ì„¸ë¡œ í¬ê¸°
 	}
 	break;
 
-	case WM_ERASEBKGND:    // ¹è°æ»ö, ¹Ú½º change
+	case WM_ERASEBKGND:    // ë°°ê²½ìƒ‰, ë°•ìŠ¤ change
 	{
 		HDC hdc = (HDC)wParam;
 		RECT rect;
 		GetClientRect(hwnd, &rect);
-		HBRUSH hBrush = CreateSolidBrush(RGB(255, 240, 200)); // Å©¸²»ö º¯°æ
+		HBRUSH hBrush = CreateSolidBrush(RGB(255, 240, 200)); // í¬ë¦¼ìƒ‰ ë³€ê²½
 		FillRect(hdc, &rect, hBrush);
 		DeleteObject(hBrush);
 
-		// margin°ú paddingÀ» ¹İ¿µÇÏ¿© »ç°¢ÇüÀÇ À§Ä¡¿Í Å©±â °è»ê
+		// marginê³¼ paddingì„ ë°˜ì˜í•˜ì—¬ ì‚¬ê°í˜•ì˜ ìœ„ì¹˜ì™€ í¬ê¸° ê³„ì‚°
 		RECT boxRect = {
 			rect.left + 8,    // left margin
 			rect.top + 8,     // top margin
@@ -706,35 +710,35 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			rect.bottom - 8   // bottom margin
 		};
 
-		// »ç°¢Çü ±×¸®±â
-		HBRUSH hBrushBox = CreateSolidBrush(RGB(255, 240, 200));  // ¹Ú½º »ö»ó
+		// ì‚¬ê°í˜• ê·¸ë¦¬ê¸°
+		HBRUSH hBrushBox = CreateSolidBrush(RGB(255, 240, 200));  // ë°•ìŠ¤ ìƒ‰ìƒ
 		FillRect(hdc, &boxRect, hBrushBox);
 		FrameRect(hdc, &boxRect, CreateSolidBrush(RGB(0, 0, 0)));
 		DeleteObject(hBrushBox);
 
-		// drawing box ºÎºĞ
+		// drawing box ë¶€ë¶„
 		RECT drawArea = {
 			rect.left + 8,    // left margin
 			rect.top + 8 + 8 + 8 + 64,     // top margin
 			rect.right - 8,   // right margin
 			rect.bottom - 8   // bottom margin
 		};
-		HBRUSH hBrushDrawArea = CreateSolidBrush(RGB(255, 255, 255));  // ¹Ú½º »ö»ó
+		HBRUSH hBrushDrawArea = CreateSolidBrush(RGB(255, 255, 255));  // ë°•ìŠ¤ ìƒ‰ìƒ
 		FillRect(hdc, &drawArea, hBrushDrawArea);
 		FrameRect(hdc, &drawArea, CreateSolidBrush(RGB(0, 0, 0)));
 		DeleteObject(hBrushDrawArea);
 
-		return 1; // Ã³¸®µÇ¾úÀ½À» ¾Ë·ÁÁÜ
+		return 1; // ì²˜ë¦¬ë˜ì—ˆìŒì„ ì•Œë ¤ì¤Œ
 	}
 	break;
 
-	case WM_DRAWITEM:    // ¹öÆ° ÀÌº¥Æ® °ü·Ã
+	case WM_DRAWITEM:    // ë²„íŠ¼ ì´ë²¤íŠ¸ ê´€ë ¨
 	{
 		LPDRAWITEMSTRUCT pDIS = (LPDRAWITEMSTRUCT)lParam;
 		if (pDIS->CtlType == ODT_BUTTON && pDIS->CtlID == 1 | 2 | 3 | 4 | 5)
 		{
-			// ±×¸²ÀÚ È¿°ú¸¦ ±×¸³´Ï´Ù.
-			HPEN hShadowPen = CreatePen(PS_SOLID, 1, RGB(128, 128, 128));  // È¸»ö Ææ
+			// ê·¸ë¦¼ì íš¨ê³¼ë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
+			HPEN hShadowPen = CreatePen(PS_SOLID, 1, RGB(128, 128, 128));  // íšŒìƒ‰ íœ
 			SelectObject(pDIS->hDC, hShadowPen);
 			POINT shadowPoints[] =
 			{
@@ -745,25 +749,25 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			Polyline(pDIS->hDC, shadowPoints, 3);
 			DeleteObject(hShadowPen);
 
-			// ¿Ü°û¼±À» ±×¸³´Ï´Ù.
-			HPEN hBorderPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));  // °ËÀº»ö Ææ
+			// ì™¸ê³½ì„ ì„ ê·¸ë¦½ë‹ˆë‹¤.
+			HPEN hBorderPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));  // ê²€ì€ìƒ‰ íœ
 			SelectObject(pDIS->hDC, hBorderPen);
 			Rectangle(pDIS->hDC, pDIS->rcItem.left, pDIS->rcItem.top, pDIS->rcItem.right, pDIS->rcItem.bottom);
 			DeleteObject(hBorderPen);
 
-			// ¹öÆ°ÀÇ ÅØ½ºÆ®¸¦ ±×¸³´Ï´Ù.
+			// ë²„íŠ¼ì˜ í…ìŠ¤íŠ¸ë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
 			SIZE size;
 			wchar_t text[256];
 			GetWindowText(pDIS->hwndItem, text, 256);
 			GetTextExtentPoint32(pDIS->hDC, text, wcslen(text), &size);
-			SetTextColor(pDIS->hDC, RGB(30, 28, 28));  // ÅØ½ºÆ® »ö»ó (ÇÏ¾á»ö)
+			SetTextColor(pDIS->hDC, RGB(30, 28, 28));  // í…ìŠ¤íŠ¸ ìƒ‰ìƒ (í•˜ì–€ìƒ‰)
 			TextOut(pDIS->hDC,
 				(pDIS->rcItem.right - size.cx) / 2,
 				(pDIS->rcItem.bottom - size.cy) / 2,
 				text,
 				wcslen(text));
 
-			return TRUE;  // ¸Ş½ÃÁö Ã³¸® ¿Ï·á
+			return TRUE;  // ë©”ì‹œì§€ ì²˜ë¦¬ ì™„ë£Œ
 		}
 	}
 	break;
@@ -796,11 +800,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 
 
-	/* À©µµ¿ì Å¬·¡½º ¼±¾ğ.*/
+	/* ìœˆë„ìš° í´ë˜ìŠ¤ ì„ ì–¸.*/
 	WNDCLASS wc;
-	ZeroMemory(&wc, sizeof(wc));	// ¸ğµÎ 0À¸·Î ÃÊ±âÈ­.
+	ZeroMemory(&wc, sizeof(wc));	// ëª¨ë‘ 0ìœ¼ë¡œ ì´ˆê¸°í™”.
 
-	// À©µµ¿ì Å¬·¡½º °ª ¼³Á¤
+	// ìœˆë„ìš° í´ë˜ìŠ¤ ê°’ ì„¤ì •
 	wc.hInstance = hInstance;
 	wc.lpszClassName = TEXT("Computer Software");
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
@@ -811,23 +815,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	wc.cbWndExtra = 0;
 	wc.lpszClassName = L"ButtonWindowClass";
 
-	// À©µµ¿ì Å¬·¡½º µî·Ï.
+	// ìœˆë„ìš° í´ë˜ìŠ¤ ë“±ë¡.
 	if (RegisterClass(&wc) == 0)
 	{
 		MessageBox(NULL, L"RegisterClass failed!", L"Error", MB_ICONERROR);
-		exit(-1);	//¿¹¿Ü
+		exit(-1);	//ì˜ˆì™¸
 	}
 
-	// Window viewport ¿µ¿ª Á¶Á¤
+	// Window viewport ì˜ì—­ ì¡°ì •
 	RECT rect = { 0, 0, 800, 480 };
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, 0);
 	int width = rect.right - rect.left;
 	int height = rect.bottom - rect.top;
 
-	// À©µµ¿ì »ı¼º
+	// ìœˆë„ìš° ìƒì„±
 	hwnd = CreateWindow(
 		wc.lpszClassName,
-		TEXT("°õµ¹ÀÌ"),
+		TEXT("ê³°ëŒì´"),
 		WS_OVERLAPPEDWINDOW,
 		0, 0,
 		width, height,
@@ -837,7 +841,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	);
 
 
-	// ¿À·ù °Ë»ç.
+	// ì˜¤ë¥˜ ê²€ì‚¬.
 	if (!hwnd) {
 		return FALSE;
 	}
@@ -863,13 +867,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		628, 16, 137, 64, hwnd, (HMENU)5, hInstance, NULL);
 
 
-	// Ã¢ º¸ÀÌ±â.
-	ShowWindow(hwnd, SW_SHOW); // Ã¢ ¶ç¿ì°í
-	UpdateWindow(hwnd); // ¾÷µ¥ÀÌÆ®ÇØ¾ß º¸ÀÓ. ÇÑ ½ÖÀ¸·Î ¾´´Ù°í º¸¸é µÊ.
+	// ì°½ ë³´ì´ê¸°.
+	ShowWindow(hwnd, SW_SHOW); // ì°½ ë„ìš°ê³ 
+	UpdateWindow(hwnd); // ì—…ë°ì´íŠ¸í•´ì•¼ ë³´ì„. í•œ ìŒìœ¼ë¡œ ì“´ë‹¤ê³  ë³´ë©´ ë¨.
 
 
 
-	// ¸Ş½ÃÁö Ã³¸® ·çÇÁ.
+	// ë©”ì‹œì§€ ì²˜ë¦¬ ë£¨í”„.
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
 
@@ -877,20 +881,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	while (msg.message != WM_QUIT)
 	{
-		// ¸Ş½ÃÁö Ã³¸®.
+		// ë©”ì‹œì§€ ì²˜ë¦¬.
 		if (GetMessage(&msg, hwnd, 0, 0))
 		{
 
-			// ¸Ş½ÃÁö ÇØ¼®ÇØÁà.
+			// ë©”ì‹œì§€ í•´ì„í•´ì¤˜.
 			TranslateMessage(&msg);
-			// ¸Ş½ÃÁö¸¦ Ã³¸®ÇØ¾ßÇÒ °÷¿¡ Àü´ŞÇØÁà.
+			// ë©”ì‹œì§€ë¥¼ ì²˜ë¦¬í•´ì•¼í•  ê³³ì— ì „ë‹¬í•´ì¤˜.
 			DispatchMessage(&msg);
 
 		}
 	}
 	UnregisterClass(wc.lpszClassName, wc.hInstance);
 
-	//Á¾·á ¸Ş½ÃÁö º¸³»±â
+	//ì¢…ë£Œ ë©”ì‹œì§€ ë³´ë‚´ê¸°
 	return (int)msg.wParam;
 
 }
