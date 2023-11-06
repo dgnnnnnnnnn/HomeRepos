@@ -15,6 +15,10 @@ bool isDrawingCube = false;
 bool wasDrawingLion = false;
 bool BonobonoSwitch = false;
 
+BOOL CUBE_DRAW_MODE = false;
+BOOL CUBE_RESIZE_MODE = false;
+
+
 POINT startPointBox = { 0 };  
 POINT endPointBox = { 0 };
 
@@ -26,6 +30,10 @@ POINT endPointLion = { 0 };
 
 POINT startPointCube = { 0 };
 POINT endPointCube = { 0 };
+POINT cubeResizePoint = { 0 };
+POINT cubePoints[8]; // 전역변수 resize cube용
+
+
 int isMouseLButtonPressed = 0;
 int isMouseRButtonPressed = 0;
 int isMouseOnDrawingBox = 0;
@@ -37,6 +45,7 @@ int emx, emy;
 int mmx, mmy;
 int bx, by;
 int bbx, bby;
+int ccx, ccy;
 int radius;  // 원의 반지름
 
 RECT drawArea;
@@ -78,15 +87,55 @@ const int DEFAULT_NOSE2_Y = 55;
 
 
 
+//bool InRect(INT mmx, INT mmy, RECT rect1)    // 현재커서위치, 지정할 사각형 영역
+//{
+//	if ((mmx > rect1.left && mmx < rect1.right) &&
+//		(mmy > rect1.top && mmy < rect1.bottom))
+//	{
+//		return 1; // 도형과 겹침
+//	}
+//	return 0; // 두 RECT가 겹치지 않음
+//}
 
-bool InRect(INT mmx, INT mmy, RECT rect1)    // 현재커서위치, 지정할 사각형 영역
-{
-	if ((mmx > rect1.left && mmx < rect1.right) &&
-		(mmy > rect1.top && mmy < rect1.bottom))
-	{
-		return 1; // 도형과 겹침
+bool InBox(int mmx, int mmy, POINT startPointBox, POINT endPointBox) {
+
+	/* 3차원 Box를 2차원 형태로 구현하면 3개의 도형이 나옴 -> 각각 front,top,rightFace의 포인트를 가짐 
+	   평행사변형은 2개의 삼각형으로 쪼개 검사해야하지만 생략하고 리전함수 사용 */
+
+	POINT startPoint = { min(startPointBox.x, endPointBox.x), min(startPointBox.y, endPointBox.y) };
+	POINT endPoint = { max(startPointBox.x, endPointBox.x), max(startPointBox.y, endPointBox.y) };
+
+	// 드래그 방향을 기준으로 평행 투영에 대한 오프셋 계산 -> 시작포인트보다 종료포인트가 더 작은 경우도 있으니까
+	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
+	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
+
+	POINT cubePoints[8] = {
+		{startPoint.x, startPoint.y},
+		{endPoint.x, startPoint.y},
+		{endPoint.x, endPoint.y},
+		{startPoint.x, endPoint.y},
+		{startPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, endPoint.y + offset_y},
+		{startPoint.x + offset_x,endPoint.y + offset_y}
+	};
+
+	POINT frontFace[4] = { cubePoints[0], cubePoints[1], cubePoints[2], cubePoints[3] };
+
+	POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
+	HRGN hRgnOne = CreatePolygonRgn(topFace, 4, WINDING);      // 리전(위쪽 평행사변형) 생성
+	BOOL bInsideOne = PtInRegion(hRgnOne, mmx, mmy);           // PtInRegion함수) mmx, mmy이 리전에 있는지 검사해 true-false 반환
+
+	POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
+	HRGN hRgnTwo = CreatePolygonRgn(rightFace, 4, WINDING);  
+	BOOL bInsideTwo = PtInRegion(hRgnTwo, mmx, mmy);        
+
+
+	if ((mmx > startPoint.x && mmx < endPoint.x && mmy > startPoint.y && mmy < endPoint.y)
+		|| bInsideOne || bInsideTwo) {
+		return true;
 	}
-	return 0; // 두 RECT가 겹치지 않음
+	return false;
 }
 
 BOOL InCircle(int x, int y, POINT center, int radius) {
@@ -94,7 +143,6 @@ BOOL InCircle(int x, int y, POINT center, int radius) {
 	int dy = y - center.y;
 	return (dx * dx + dy * dy) <= (radius * radius);
 }
-
 
 bool InDrawArea(INT x, INT y, RECT rect2)    // 현재커서위치, 지정할 사각형 영역
 {
@@ -105,7 +153,6 @@ bool InDrawArea(INT x, INT y, RECT rect2)    // 현재커서위치, 지정할 사각형 영역
 	}
 	return 0; // 두 RECT가 겹치지 않음
 }
-
 
 void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 {
@@ -189,22 +236,72 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	LineTo(hdc, rightEyebrowEnd.x, rightEyebrowEnd.y+2);
 }
 
+void DrawBox(HDC hdc, POINT startPointBox, POINT endPointBox) {
 
-void DrawBox(HDC hdc, POINT startPoint, POINT endPoint) {
-	// Define the offset for the parallel projection
-	const int offset_x = 30;
-	const int offset_y = 30;
+	// 작은 좌표를 startPoint로 수정
+	POINT startPoint = { min(startPointBox.x, endPointBox.x), min(startPointBox.y, endPointBox.y) };
+	POINT endPoint = { max(startPointBox.x, endPointBox.x), max(startPointBox.y, endPointBox.y) };
 
-	// Define the points of the cube
+	// 드래그 방향을 기준으로 평행 투영에 대한 오프셋 계산 -> 시작포인트보다 종료포인트가 더 작은 경우도 있으니까
+	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
+	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
+
 	POINT cubePoints[8] = {
 		{startPoint.x, startPoint.y},
 		{endPoint.x, startPoint.y},
 		{endPoint.x, endPoint.y},
 		{startPoint.x, endPoint.y},
-		{startPoint.x + offset_x, startPoint.y - offset_y},
-		{endPoint.x + offset_x, startPoint.y - offset_y},
-		{endPoint.x + offset_x, endPoint.y - offset_y},
-		{startPoint.x + offset_x,endPoint.y - offset_y}
+		{startPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, endPoint.y + offset_y},
+		{startPoint.x + offset_x,endPoint.y + offset_y}
+	};
+
+	// Define a brush with a color
+	HBRUSH hBrush = CreateSolidBrush(RGB(198, 219, 218)); //  cobalt color
+	SelectObject(hdc, hBrush);
+
+	// Fill the front face
+	POINT frontFace[4] = { cubePoints[0], cubePoints[1], cubePoints[2], cubePoints[3] };
+	Polygon(hdc, frontFace, 4);
+	// Fill the top face
+	POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
+	Polygon(hdc, topFace, 4);
+	// Fill the right face
+	POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
+	Polygon(hdc, rightFace, 4);
+
+	// You can add other faces if needed
+
+	// Draw lines between the points to form the cube
+	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0)); // Black pen
+	SelectObject(hdc, hPen);
+
+
+
+	DeleteObject(hPen);
+	DeleteObject(hBrush); // Don't forget to delete the brush
+}
+
+void DrawCube(HDC hdc, POINT startPointCube, POINT endPointCube) {
+
+	// 작은 좌표를 startPoint로 수정
+	POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
+	POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
+
+	// 드래그 방향을 기준으로 평행 투영에 대한 오프셋 계산 -> 시작포인트보다 종료포인트가 더 작은 경우도 있으니까
+	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
+	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
+
+	POINT cubePoints[8] = {
+		{startPoint.x, startPoint.y},
+		{endPoint.x, startPoint.y},
+		{endPoint.x, endPoint.y},
+		{startPoint.x, endPoint.y},
+		{startPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, startPoint.y + offset_y},
+		{endPoint.x + offset_x, endPoint.y + offset_y},
+		{startPoint.x + offset_x,endPoint.y + offset_y}
 	};
 
 	// Define a brush with a color
@@ -233,23 +330,25 @@ void DrawBox(HDC hdc, POINT startPoint, POINT endPoint) {
 		LineTo(hdc, cubePoints[(i + 1) % 4 + 4].x, cubePoints[(i + 1) % 4 + 4].y);
 		LineTo(hdc, cubePoints[i + 4].x, cubePoints[i + 4].y);
 		LineTo(hdc, cubePoints[i].x, cubePoints[i].y);
-	}  
+	}
 
 	DeleteObject(hPen);
 	DeleteObject(hBrush); // Don't forget to delete the brush
 }
 
-
 void DrawShape(HWND hwnd, HDC hdc) {
 	if (isDrawingBox && (isMouseLButtonPressed || isMouseRButtonPressed)) {
-		DrawBox(hdc, startPointBox, endPointBox);
+		DrawBox(hdc, startPointBox, endPointBox);     // 박스 생성(좌클릭, 우클릭 모두 사용중)
+	}
+	if (isDrawingCube && (isMouseLButtonPressed || isMouseRButtonPressed)) {
+		DrawCube(hdc, startPointCube, endPointCube);  // 큐브 생성
 	}
 }
 
 // 윈도우의 이벤트를 처리하는 콜백(Callback) 함수.
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	SetTimer(hwnd, 1, 100, NULL);
+	SetTimer(hwnd, 1, 300, NULL);
 
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hwnd, &ps);
@@ -296,6 +395,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			isDrawingBonobono = false;
 			isDrawingLion = false;
 			isDrawingCube = true;
+			CUBE_DRAW_MODE = true;     // 버튼을 클릭했을때는 화면이 초기화 상태이므로 DRAW모드
+			CUBE_RESIZE_MODE = false;
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		break;
@@ -332,7 +433,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:  // 마우스 왼쪽 클릭시
 	{
 		///** 사각형 그리기
-		if (isMouseOnDrawingBox && isDrawingBox) {  // Cube
+		if (isMouseOnDrawingBox && isDrawingBox) {  // Box
 			isMouseLButtonPressed = 1;
 
 			startPointBox.x = LOWORD(lParam);
@@ -353,13 +454,37 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			endPointCircle.y = startPointCircle.y;
 
 			isMouseLButtonPressed = 1;
-			InvalidateRect(hwnd, NULL, TRUE);
+		//	InvalidateRect(hwnd, NULL, TRUE);
 		}
 
+		///** 라이언 그리기
 		if (isMouseOnDrawingBox && isDrawingLion) {  // Lion 
 			startPointLion.x = LOWORD(lParam);
 			startPointLion.y = HIWORD(lParam);
 			isMouseLButtonPressed = 1;
+		}
+
+		///** 큐브 그리기
+		if (isMouseOnDrawingBox && isDrawingCube) {  // Box
+			isMouseLButtonPressed = 1;
+
+			ccx = LOWORD(lParam);
+			ccy = HIWORD(lParam);
+			if (InBox(ccx, ccy, startPointCube, endPointCube)) {   // Cube안에 커서가 있는지 검사
+				CUBE_DRAW_MODE = false;
+				CUBE_RESIZE_MODE = true;
+			}
+			else {
+				CUBE_DRAW_MODE = true;
+				CUBE_RESIZE_MODE = false;
+				InvalidateRect(hwnd, NULL, TRUE);
+
+				startPointCube.x = LOWORD(lParam);
+				startPointCube.y = HIWORD(lParam);
+				endPointCube.x = startPointCube.x;
+				endPointCube.y = startPointCube.y;
+			}
+
 		}
 
 	}
@@ -375,10 +500,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bx = bbx;
 			by = bby;
 
-			isMouseRButtonPressed = 1;
-
-			if (InRect(mmx, mmy, rect)) {
-				//사각형의 영역내에 있다면
+			if (InBox(bbx, bby, startPointBox, endPointBox)) {
+				// Box 영역내에 있다면 눌림상태로
 				isMouseRButtonPressed = 1;
 			}
 			// InvalidateRect(hwnd, NULL, TRUE);
@@ -393,6 +516,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (InCircle(mmx, mmy, startPointCircle, radius)) { // 우클릭이 원 내부에서 발생한 경우
 				isMouseRButtonPressed = 1;
 			}
+		}
+
+		if (isMouseOnDrawingBox && isDrawingCube) {
+
+			bbx = bx = LOWORD(lParam);
+			bby = by = HIWORD(lParam);
+
+			bx = bbx;
+			by = bby;
+
+			if (InBox(bbx, bby, startPointCube, endPointCube)) {
+				// Cube 영역내에 있다면 눌림상태로
+				isMouseRButtonPressed = 1;
+			}
+			// InvalidateRect(hwnd, NULL, TRUE);
 		}
 	}
 	break;
@@ -480,6 +618,30 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			mmx = currentX; // 현재 위치 업데이트
 			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT 호출
 		}
+		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCube) { 
+			bx = LOWORD(lParam);
+			by = HIWORD(lParam);
+
+			int dx = bx - bbx;
+			int dy = by - bby;
+			bbx = bx;  // 초기화가 없으면 첫 rButtonDown에서 설정한 bbx값을 계속 가져오게 됨!
+			bby = by;
+
+
+			if (dx != 0 || dy != 0) {
+
+
+				startPointCube.x += dx;
+				startPointCube.y += dy;
+				endPointCube.x += dx;
+				endPointCube.y += dy;
+
+				InvalidateRect(hwnd, NULL, TRUE); // 창을 다시 그립니다.
+
+				/*startPointCube.x = bx;
+				startPointCube.y = by;*/
+			}
+		}
 
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
 			endPointBox.x = LOWORD(lParam);
@@ -496,8 +658,130 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			endPointLion.y = HIWORD(lParam);
 			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT 호출
 		}
+		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_DRAW_MODE) {
+			endPointCube.x = LOWORD(lParam);
+			endPointCube.y = HIWORD(lParam);
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT 호출
+		}
+		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_RESIZE_MODE) {
+			POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
+			POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
+
+			// 드래그 방향을 기준으로 평행 투영에 대한 오프셋 계산 -> 시작포인트보다 종료포인트가 더 작은 경우도 있으니까
+			const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
+			const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
+
+			cubePoints[0] = { startPoint.x, startPoint.y };
+			cubePoints[1] = { endPoint.x, startPoint.y };
+			cubePoints[2] = { endPoint.x, endPoint.y };
+			cubePoints[3] = { startPoint.x, endPoint.y };
+			cubePoints[4] = { startPoint.x + offset_x, startPoint.y + offset_y };
+			cubePoints[5] = { endPoint.x + offset_x, startPoint.y + offset_y };
+			cubePoints[6] = { endPoint.x + offset_x, endPoint.y + offset_y };
+			cubePoints[7] = { startPoint.x + offset_x, endPoint.y + offset_y };
+
+			// Fill the front face
+			POINT frontFace[4] = { cubePoints[0], cubePoints[1], cubePoints[2], cubePoints[3] };
+			POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
+			POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
+
+			
+			int currentX = LOWORD(lParam);
+			int currentY = HIWORD(lParam);
+
+			int dx = currentX - startPointCube.x; // x축 변화량
+
+			// 상자 크기 조정 로직
+			if (dx != 0) {
+				//double scaleFactor = 1 + (dx / 100.0); // 예: 드래그로 100px 이동시 2배 증가
+				//double scaleFactor = max(0.1, 1.0 + (dx / 100.0));
+				for (int i = 0; i < 8; ++i) {
+					// 전면의 상자 점들을 조정
 
 
+					switch (i) {
+					case 0:
+						cubePoints[i].x = (int)(cubePoints[i].x - dx);
+						cubePoints[i].y = (int)(cubePoints[i].y - dx);
+						break;
+					case 1:
+						cubePoints[i].x = (int)(cubePoints[i].x + dx);
+						cubePoints[i].y = (int)(cubePoints[i].y - dx);
+						break;
+					case 2:
+						cubePoints[i].x = (int)(cubePoints[i].x + dx);
+						cubePoints[i].y = (int)(cubePoints[i].y + dx);
+						break;
+					case 3:
+						cubePoints[i].x = (int)(cubePoints[i].x - dx);
+						cubePoints[i].y = (int)(cubePoints[i].y + dx);
+						break;
+					case 4:
+						cubePoints[i].x = (int)(cubePoints[i].x - dx);
+						cubePoints[i].y = (int)(cubePoints[i].y - dx);
+						break;
+					case 5:
+						cubePoints[i].x = (int)(cubePoints[i].x + dx);
+						cubePoints[i].y = (int)(cubePoints[i].y - dx);
+						break;
+					case 6:
+						cubePoints[i].x = (int)(cubePoints[i].x + dx);
+						cubePoints[i].y = (int)(cubePoints[i].y + dx);
+						break;
+					case 7:
+						cubePoints[i].x = (int)(cubePoints[i].x - dx);
+						cubePoints[i].y = (int)(cubePoints[i].y + dx);
+						break;
+					}
+					
+		
+				
+
+					// 옆면의 상자 점들에 대한 조정도 추가
+					// 평행사변형의 수직 변은 고정되고, 수평 변만 scaleFactor에 따라 변동되어야 함
+				}
+
+				/*
+				int currentX = LOWORD(lParam);
+				int currentY = HIWORD(lParam);
+
+				int initialWidth = endPointCube.x - startPointCube.x;
+				int initialHeight = endPointCube.y - startPointCube.y;
+
+				int dx = currentX - startPointCube.x; // x축 변화량
+				int dy = currentY - startPointCube.y;
+
+				double scaleX = (initialWidth + dx) / (double)initialWidth;
+				double scaleY = (initialHeight + dy) / (double)initialHeight;
+
+				// 상자 크기 조정 로직
+				if (dx != 0) {
+					for (int i = 0; i < 8; ++i) {
+						int originalX = (i < 4) ? startPointCube.x : (startPointCube.x + offset_x); // 전면과 옆면 점들의 원래 x 위치
+						int originalY = (i % 4 == 0 || i % 4 == 3) ? startPointCube.y : (startPointCube.y + offset_y); // 전면과 옆면 점들의 원래 y 위치
+
+						// 점 위치 조정
+						cubePoints[i].x = startPointCube.x + (int)((cubePoints[i].x - originalX) * scaleX);
+						cubePoints[i].y = startPointCube.y + (int)((cubePoints[i].y - originalY) * scaleY);
+					}
+				
+
+					// 옆면의 상자 점들에 대한 조정도 추가
+					// 평행사변형의 수직 변은 고정되고, 수평 변만 scaleFactor에 따라 변동되어야 함
+				}
+				*/
+			
+
+				//startPointCube.x = currentX; // 드래그 시작 위치 업데이트
+				//startPointCube.y = currentY; 
+
+				InvalidateRect(hwnd, NULL, TRUE); // 화면 갱신
+			}
+	
+	
+		}
+
+	
 		
 		hdc = (HDC)wParam;   // 전체 gui RECT의 크기를 가져옴
 		RECT rect;
@@ -569,14 +853,61 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(hBrushCircle);
 			EndPaint(hwnd, &ps);
 			break;
+
 		}
 
-
-		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
-
-			// 현재 상태에 따라 도형을 그릴 수 있습니다.
+		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_DRAW_MODE)
+		{
 			DrawShape(hwnd, hdc);
 		}
+
+		else if ((isMouseLButtonPressed || isMouseRButtonPressed) && isMouseOnDrawingBox && isDrawingCube && CUBE_RESIZE_MODE) {
+			
+			// 작은 좌표를 startPoint로 수정
+			POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
+			POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
+
+			// 드래그 방향을 기준으로 평행 투영에 대한 오프셋 계산 -> 시작포인트보다 종료포인트가 더 작은 경우도 있으니까
+			const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
+			const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
+
+			// Define a brush with a color
+			HBRUSH hBrush = CreateSolidBrush(RGB(200, 200, 200)); // Light gray color
+			SelectObject(hdc, hBrush);
+
+			// Fill the front face
+			POINT frontFace[4] = { cubePoints[0], cubePoints[1], cubePoints[2], cubePoints[3] };
+			Polygon(hdc, frontFace, 4);
+			// Fill the top face
+			POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
+			Polygon(hdc, topFace, 4);
+			// Fill the right face
+			POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
+			Polygon(hdc, rightFace, 4);
+
+			// You can add other faces if needed
+
+			// Draw lines between the points to form the cube
+			HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0)); // Black pen
+			SelectObject(hdc, hPen);
+
+			for (int i = 0; i < 4; ++i) {
+				MoveToEx(hdc, cubePoints[i].x, cubePoints[i].y, NULL);
+				LineTo(hdc, cubePoints[(i + 1) % 4].x, cubePoints[(i + 1) % 4].y);
+				LineTo(hdc, cubePoints[(i + 1) % 4 + 4].x, cubePoints[(i + 1) % 4 + 4].y);
+				LineTo(hdc, cubePoints[i + 4].x, cubePoints[i + 4].y);
+				LineTo(hdc, cubePoints[i].x, cubePoints[i].y);
+			}
+
+			DeleteObject(hPen);
+			DeleteObject(hBrush); // Don't forget to delete the brush
+		}
+
+		//else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
+
+		//	// 현재 상태에 따라 도형을 그릴 수 있습니다.
+		//	DrawShape(hwnd, hdc);
+		//}
 		
 		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCircle) {
 			HBRUSH hBrushCircle = CreateSolidBrush(RGB(255, 216, 190));
@@ -656,6 +987,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			OnMouseDrag(hdc, startPointLion, endPointLion);
 		}
 		else if (isDrawingCube) {
+			DrawShape(hwnd, hdc);
 		}
 
 
