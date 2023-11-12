@@ -19,7 +19,7 @@ BOOL CUBE_DRAW_MODE = false;
 BOOL CUBE_RESIZE_MODE = false;
 
 
-POINT startPointBox = { 0 };  
+POINT startPointBox = { 0 };
 POINT endPointBox = { 0 };
 
 POINT startPointCircle = { 0 };
@@ -31,7 +31,7 @@ POINT endPointLion = { 0 };
 POINT startPointCube = { 0 };
 POINT endPointCube = { 0 };
 POINT cubeResizePoint = { 0 };
-POINT cubePoints[8]; // Àü¿ªº¯¼ö resize cube¿ë
+POINT cubePoints[8]; // ì „ì—­ë³€ìˆ˜ resize cubeìš©
 
 
 int isMouseLButtonPressed = 0;
@@ -45,12 +45,8 @@ int emx, emy;
 int mmx, mmy;
 int bx, by;
 int bbx, bby;
-<<<<<<< HEAD
 int ccx, ccy;
-int radius;  // ¿øÀÇ ¹İÁö¸§
-=======
 int radius;  // ì›ì˜ ë°˜ì§€ë¦„
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
 
 RECT drawArea;
 
@@ -91,26 +87,25 @@ const int DEFAULT_NOSE2_Y = 55;
 
 
 
-//bool InRect(INT mmx, INT mmy, RECT rect1)    // ÇöÀçÄ¿¼­À§Ä¡, ÁöÁ¤ÇÒ »ç°¢Çü ¿µ¿ª
+//bool InRect(INT mmx, INT mmy, RECT rect1)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚¬ê°í˜• ì˜ì—­
 //{
 //	if ((mmx > rect1.left && mmx < rect1.right) &&
 //		(mmy > rect1.top && mmy < rect1.bottom))
 //	{
-//		return 1; // µµÇü°ú °ãÄ§
+//		return 1; // ë„í˜•ê³¼ ê²¹ì¹¨
 //	}
-//	return 0; // µÎ RECT°¡ °ãÄ¡Áö ¾ÊÀ½
+//	return 0; // ë‘ RECTê°€ ê²¹ì¹˜ì§€ ì•ŠìŒ
 //}
 
-<<<<<<< HEAD
 bool InBox(int mmx, int mmy, POINT startPointBox, POINT endPointBox) {
 
-	/* 3Â÷¿ø Box¸¦ 2Â÷¿ø ÇüÅÂ·Î ±¸ÇöÇÏ¸é 3°³ÀÇ µµÇüÀÌ ³ª¿È -> °¢°¢ front,top,rightFaceÀÇ Æ÷ÀÎÆ®¸¦ °¡Áü 
-	   ÆòÇà»çº¯ÇüÀº 2°³ÀÇ »ï°¢ÇüÀ¸·Î ÂÉ°³ °Ë»çÇØ¾ßÇÏÁö¸¸ »ı·«ÇÏ°í ¸®ÀüÇÔ¼ö »ç¿ë */
+	/* 3ì°¨ì› Boxë¥¼ 2ì°¨ì› í˜•íƒœë¡œ êµ¬í˜„í•˜ë©´ 3ê°œì˜ ë„í˜•ì´ ë‚˜ì˜´ -> ê°ê° front,top,rightFaceì˜ í¬ì¸íŠ¸ë¥¼ ê°€ì§
+	   í‰í–‰ì‚¬ë³€í˜•ì€ 2ê°œì˜ ì‚¼ê°í˜•ìœ¼ë¡œ ìª¼ê°œ ê²€ì‚¬í•´ì•¼í•˜ì§€ë§Œ ìƒëµí•˜ê³  ë¦¬ì „í•¨ìˆ˜ ì‚¬ìš© */
 
 	POINT startPoint = { min(startPointBox.x, endPointBox.x), min(startPointBox.y, endPointBox.y) };
 	POINT endPoint = { max(startPointBox.x, endPointBox.x), max(startPointBox.y, endPointBox.y) };
 
-	// µå·¡±× ¹æÇâÀ» ±âÁØÀ¸·Î ÆòÇà Åõ¿µ¿¡ ´ëÇÑ ¿ÀÇÁ¼Â °è»ê -> ½ÃÀÛÆ÷ÀÎÆ®º¸´Ù Á¾·áÆ÷ÀÎÆ®°¡ ´õ ÀÛÀº °æ¿ìµµ ÀÖÀ¸´Ï±î
+	// ë“œë˜ê·¸ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ í‰í–‰ íˆ¬ì˜ì— ëŒ€í•œ ì˜¤í”„ì…‹ ê³„ì‚° -> ì‹œì‘í¬ì¸íŠ¸ë³´ë‹¤ ì¢…ë£Œí¬ì¸íŠ¸ê°€ ë” ì‘ì€ ê²½ìš°ë„ ìˆìœ¼ë‹ˆê¹Œ
 	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
 	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
 
@@ -128,12 +123,12 @@ bool InBox(int mmx, int mmy, POINT startPointBox, POINT endPointBox) {
 	POINT frontFace[4] = { cubePoints[0], cubePoints[1], cubePoints[2], cubePoints[3] };
 
 	POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
-	HRGN hRgnOne = CreatePolygonRgn(topFace, 4, WINDING);      // ¸®Àü(À§ÂÊ ÆòÇà»çº¯Çü) »ı¼º
-	BOOL bInsideOne = PtInRegion(hRgnOne, mmx, mmy);           // PtInRegionÇÔ¼ö) mmx, mmyÀÌ ¸®Àü¿¡ ÀÖ´ÂÁö °Ë»çÇØ true-false ¹İÈ¯
+	HRGN hRgnOne = CreatePolygonRgn(topFace, 4, WINDING);      // ë¦¬ì „(ìœ„ìª½ í‰í–‰ì‚¬ë³€í˜•) ìƒì„±
+	BOOL bInsideOne = PtInRegion(hRgnOne, mmx, mmy);           // PtInRegioní•¨ìˆ˜) mmx, mmyì´ ë¦¬ì „ì— ìˆëŠ”ì§€ ê²€ì‚¬í•´ true-false ë°˜í™˜
 
 	POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
-	HRGN hRgnTwo = CreatePolygonRgn(rightFace, 4, WINDING);  
-	BOOL bInsideTwo = PtInRegion(hRgnTwo, mmx, mmy);        
+	HRGN hRgnTwo = CreatePolygonRgn(rightFace, 4, WINDING);
+	BOOL bInsideTwo = PtInRegion(hRgnTwo, mmx, mmy);
 
 
 	if ((mmx > startPoint.x && mmx < endPoint.x && mmy > startPoint.y && mmy < endPoint.y)
@@ -141,16 +136,6 @@ bool InBox(int mmx, int mmy, POINT startPointBox, POINT endPointBox) {
 		return true;
 	}
 	return false;
-=======
-bool InRect(INT mmx, INT mmy, RECT rect1)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚¬ê°í˜• ì˜ì—­
-{
-	if ((mmx > rect1.left && mmx < rect1.right) &&
-		(mmy > rect1.top && mmy < rect1.bottom))
-	{
-		return 1; // ë„í˜•ê³¼ ê²¹ì¹¨
-	}
-	return 0; // ë‘ RECTê°€ ê²¹ì¹˜ì§€ ì•ŠìŒ
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
 }
 
 BOOL InCircle(int x, int y, POINT center, int radius) {
@@ -159,12 +144,7 @@ BOOL InCircle(int x, int y, POINT center, int radius) {
 	return (dx * dx + dy * dy) <= (radius * radius);
 }
 
-<<<<<<< HEAD
-bool InDrawArea(INT x, INT y, RECT rect2)    // ÇöÀçÄ¿¼­À§Ä¡, ÁöÁ¤ÇÒ »ç°¢Çü ¿µ¿ª
-=======
-
 bool InDrawArea(INT x, INT y, RECT rect2)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚¬ê°í˜• ì˜ì—­
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
 {
 	if ((x > rect2.left && x < rect2.right) &&
 		(y > rect2.top && y < rect2.bottom))
@@ -176,7 +156,7 @@ bool InDrawArea(INT x, INT y, RECT rect2)    // í˜„ì¬ì»¤ì„œìœ„ì¹˜, ì§€ì •í•  ì‚
 
 void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 {
-	
+
 	// ìŠ¤ì¼€ì¼ë§ ë¹„ìœ¨ ê³„ì‚°
 	float scaleX = (float)(endPoint.x - startPoint.x) / DEFAULT_FACE_WIDTH;
 	float scaleY = (float)(endPoint.y - startPoint.y) / DEFAULT_FACE_HEIGHT;
@@ -201,7 +181,7 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	DeleteObject(Lion1);
 
 	// ëˆˆ 2ê°œ
-	HBRUSH Lion2 = CreateSolidBrush(RGB(0, 0 ,0));
+	HBRUSH Lion2 = CreateSolidBrush(RGB(0, 0, 0));
 	HBRUSH OldBrush2 = (HBRUSH)SelectObject(hdc, Lion2);
 	Ellipse(hdc, startPoint.x + DEFAULT_EYE1_X * scaleX,
 		startPoint.y + DEFAULT_EYE1_Y * scaleY,
@@ -249,20 +229,35 @@ void OnMouseDrag(HDC hdc, POINT startPoint, POINT endPoint)
 	MoveToEx(hdc, rightEyebrowStart.x, rightEyebrowStart.y, NULL);
 	LineTo(hdc, rightEyebrowEnd.x, rightEyebrowEnd.y);
 
-	MoveToEx(hdc, leftEyebrowStart.x, leftEyebrowStart.y+3, NULL);
-	LineTo(hdc, leftEyebrowEnd.x, leftEyebrowEnd.y+2);
+	MoveToEx(hdc, leftEyebrowStart.x, leftEyebrowStart.y + 3, NULL);
+	LineTo(hdc, leftEyebrowEnd.x, leftEyebrowEnd.y + 2);
 
-	MoveToEx(hdc, rightEyebrowStart.x, rightEyebrowStart.y+3, NULL);
-	LineTo(hdc, rightEyebrowEnd.x, rightEyebrowEnd.y+2);
+	MoveToEx(hdc, rightEyebrowStart.x, rightEyebrowStart.y + 3, NULL);
+	LineTo(hdc, rightEyebrowEnd.x, rightEyebrowEnd.y + 2);
+
+
+
+	// ì ì„  êµ¬í˜„ì¤‘..
+
+
+		// ì ì„  íœ ì„¤ì •
+		HPEN hPen = CreatePen(PS_DOT, 1, RGB(0, 0, 0));
+		HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+		// ì ì„  ì‚¬ê°í˜• ê·¸ë¦¬ê¸°
+		Rectangle(hdc, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+		// íœ ë°˜í™˜
+		SelectObject(hdc, hOldPen);
+		DeleteObject(hPen);
+	
 }
 
 void DrawBox(HDC hdc, POINT startPointBox, POINT endPointBox) {
 
-	// ÀÛÀº ÁÂÇ¥¸¦ startPoint·Î ¼öÁ¤
+	// ì‘ì€ ì¢Œí‘œë¥¼ startPointë¡œ ìˆ˜ì •
 	POINT startPoint = { min(startPointBox.x, endPointBox.x), min(startPointBox.y, endPointBox.y) };
 	POINT endPoint = { max(startPointBox.x, endPointBox.x), max(startPointBox.y, endPointBox.y) };
 
-	// µå·¡±× ¹æÇâÀ» ±âÁØÀ¸·Î ÆòÇà Åõ¿µ¿¡ ´ëÇÑ ¿ÀÇÁ¼Â °è»ê -> ½ÃÀÛÆ÷ÀÎÆ®º¸´Ù Á¾·áÆ÷ÀÎÆ®°¡ ´õ ÀÛÀº °æ¿ìµµ ÀÖÀ¸´Ï±î
+	// ë“œë˜ê·¸ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ í‰í–‰ íˆ¬ì˜ì— ëŒ€í•œ ì˜¤í”„ì…‹ ê³„ì‚° -> ì‹œì‘í¬ì¸íŠ¸ë³´ë‹¤ ì¢…ë£Œí¬ì¸íŠ¸ê°€ ë” ì‘ì€ ê²½ìš°ë„ ìˆìœ¼ë‹ˆê¹Œ
 	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
 	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
 
@@ -305,11 +300,11 @@ void DrawBox(HDC hdc, POINT startPointBox, POINT endPointBox) {
 
 void DrawCube(HDC hdc, POINT startPointCube, POINT endPointCube) {
 
-	// ÀÛÀº ÁÂÇ¥¸¦ startPoint·Î ¼öÁ¤
+	// ì‘ì€ ì¢Œí‘œë¥¼ startPointë¡œ ìˆ˜ì •
 	POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
 	POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
 
-	// µå·¡±× ¹æÇâÀ» ±âÁØÀ¸·Î ÆòÇà Åõ¿µ¿¡ ´ëÇÑ ¿ÀÇÁ¼Â °è»ê -> ½ÃÀÛÆ÷ÀÎÆ®º¸´Ù Á¾·áÆ÷ÀÎÆ®°¡ ´õ ÀÛÀº °æ¿ìµµ ÀÖÀ¸´Ï±î
+	// ë“œë˜ê·¸ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ í‰í–‰ íˆ¬ì˜ì— ëŒ€í•œ ì˜¤í”„ì…‹ ê³„ì‚° -> ì‹œì‘í¬ì¸íŠ¸ë³´ë‹¤ ì¢…ë£Œí¬ì¸íŠ¸ê°€ ë” ì‘ì€ ê²½ìš°ë„ ìˆìœ¼ë‹ˆê¹Œ
 	const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
 	const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
 
@@ -358,10 +353,10 @@ void DrawCube(HDC hdc, POINT startPointCube, POINT endPointCube) {
 
 void DrawShape(HWND hwnd, HDC hdc) {
 	if (isDrawingBox && (isMouseLButtonPressed || isMouseRButtonPressed)) {
-		DrawBox(hdc, startPointBox, endPointBox);     // ¹Ú½º »ı¼º(ÁÂÅ¬¸¯, ¿ìÅ¬¸¯ ¸ğµÎ »ç¿ëÁß)
+		DrawBox(hdc, startPointBox, endPointBox);     // ë°•ìŠ¤ ìƒì„±(ì¢Œí´ë¦­, ìš°í´ë¦­ ëª¨ë‘ ì‚¬ìš©ì¤‘)
 	}
 	if (isDrawingCube && (isMouseLButtonPressed || isMouseRButtonPressed)) {
-		DrawCube(hdc, startPointCube, endPointCube);  // Å¥ºê »ı¼º
+		DrawCube(hdc, startPointCube, endPointCube);  // íë¸Œ ìƒì„±
 	}
 }
 
@@ -407,6 +402,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			isDrawingLion = true;
 			startPointLion = { 0, 0 };
 			endPointLion = { 0, 0 };
+			isDrawingCube = false;
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		else if (LOWORD(wParam) == 5) {
@@ -415,7 +411,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			isDrawingBonobono = false;
 			isDrawingLion = false;
 			isDrawingCube = true;
-			CUBE_DRAW_MODE = true;     // ¹öÆ°À» Å¬¸¯ÇßÀ»¶§´Â È­¸éÀÌ ÃÊ±âÈ­ »óÅÂÀÌ¹Ç·Î DRAW¸ğµå
+			CUBE_DRAW_MODE = true;     // ë²„íŠ¼ì„ í´ë¦­í–ˆì„ë•ŒëŠ” í™”ë©´ì´ ì´ˆê¸°í™” ìƒíƒœì´ë¯€ë¡œ DRAWëª¨ë“œ
 			CUBE_RESIZE_MODE = false;
 			InvalidateRect(hwnd, NULL, TRUE);
 		}
@@ -435,30 +431,25 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 
-	//case WM_KEYDOWN:     íê¸°! BeginPaintì—ì„œ keydownì„ ë°›ì•„ì˜¤ê¸° ì–´ë ¤ì›€
-	//	// OutputDebugString(L"WM_KEYDOWN received\n");
-	//	if (wParam == VK_SPACE) {
-	//		BonobonoSwitch = true;
-	//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
-	//	}
-	//	break;
+		//case WM_KEYDOWN:     íê¸°! BeginPaintì—ì„œ keydownì„ ë°›ì•„ì˜¤ê¸° ì–´ë ¤ì›€
+		//	// OutputDebugString(L"WM_KEYDOWN received\n");
+		//	if (wParam == VK_SPACE) {
+		//		BonobonoSwitch = true;
+		//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
+		//	}
+		//	break;
 
-	//case WM_KEYUP:
-	//	if (wParam == VK_SPACE) {
-	//		BonobonoSwitch = false;
-	//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
-	//	}
-	//	break;
+		//case WM_KEYUP:
+		//	if (wParam == VK_SPACE) {
+		//		BonobonoSwitch = false;
+		//		InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ì„ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ ìš”ì²­
+		//	}
+		//	break;
 
 	case WM_LBUTTONDOWN:  // ë§ˆìš°ìŠ¤ ì™¼ìª½ í´ë¦­ì‹œ
 	{
-<<<<<<< HEAD
-		///** »ç°¢Çü ±×¸®±â
-		if (isMouseOnDrawingBox && isDrawingBox) {  // Box
-=======
 		///** ì‚¬ê°í˜• ê·¸ë¦¬ê¸°
-		if (isMouseOnDrawingBox && isDrawingBox) {  // Cube
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
+		if (isMouseOnDrawingBox && isDrawingBox) {  // Box
 			isMouseLButtonPressed = 1;
 
 			startPointBox.x = LOWORD(lParam);
@@ -479,23 +470,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			endPointCircle.y = startPointCircle.y;
 
 			isMouseLButtonPressed = 1;
-		//	InvalidateRect(hwnd, NULL, TRUE);
+			//	InvalidateRect(hwnd, NULL, TRUE);
 		}
 
-		///** ¶óÀÌ¾ğ ±×¸®±â
+		///** ë¼ì´ì–¸ ê·¸ë¦¬ê¸°
 		if (isMouseOnDrawingBox && isDrawingLion) {  // Lion 
 			startPointLion.x = LOWORD(lParam);
 			startPointLion.y = HIWORD(lParam);
 			isMouseLButtonPressed = 1;
 		}
 
-		///** Å¥ºê ±×¸®±â
+		///** íë¸Œ ê·¸ë¦¬ê¸°
 		if (isMouseOnDrawingBox && isDrawingCube) {  // Box
 			isMouseLButtonPressed = 1;
 
 			ccx = LOWORD(lParam);
 			ccy = HIWORD(lParam);
-			if (InBox(ccx, ccy, startPointCube, endPointCube)) {   // Cube¾È¿¡ Ä¿¼­°¡ ÀÖ´ÂÁö °Ë»ç
+			if (InBox(ccx, ccy, startPointCube, endPointCube)) {   // Cubeì•ˆì— ì»¤ì„œê°€ ìˆëŠ”ì§€ ê²€ì‚¬
 				CUBE_DRAW_MODE = false;
 				CUBE_RESIZE_MODE = true;
 			}
@@ -525,15 +516,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bx = bbx;
 			by = bby;
 
-<<<<<<< HEAD
 			if (InBox(bbx, bby, startPointBox, endPointBox)) {
-				// Box ¿µ¿ª³»¿¡ ÀÖ´Ù¸é ´­¸²»óÅÂ·Î
-=======
-			isMouseRButtonPressed = 1;
-
-			if (InRect(mmx, mmy, rect)) {
-				//ì‚¬ê°í˜•ì˜ ì˜ì—­ë‚´ì— ìˆë‹¤ë©´
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
+				// Box ì˜ì—­ë‚´ì— ìˆë‹¤ë©´ ëˆŒë¦¼ìƒíƒœë¡œ
 				isMouseRButtonPressed = 1;
 			}
 			// InvalidateRect(hwnd, NULL, TRUE);
@@ -559,7 +543,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			by = bby;
 
 			if (InBox(bbx, bby, startPointCube, endPointCube)) {
-				// Cube ¿µ¿ª³»¿¡ ÀÖ´Ù¸é ´­¸²»óÅÂ·Î
+				// Cube ì˜ì—­ë‚´ì— ìˆë‹¤ë©´ ëˆŒë¦¼ìƒíƒœë¡œ
 				isMouseRButtonPressed = 1;
 			}
 			// InvalidateRect(hwnd, NULL, TRUE);
@@ -616,7 +600,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bbx = bx;  // ì´ˆê¸°í™”ê°€ ì—†ìœ¼ë©´ ì²« rButtonDownì—ì„œ ì„¤ì •í•œ bbxê°’ì„ ê³„ì† ê°€ì ¸ì˜¤ê²Œ ë¨!
 			bby = by;
 
-	
+
 			if (dx != 0 || dy != 0) {
 
 
@@ -650,13 +634,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			mmx = currentX; // í˜„ì¬ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
-		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCube) { 
+		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCube) {
 			bx = LOWORD(lParam);
 			by = HIWORD(lParam);
 
 			int dx = bx - bbx;
 			int dy = by - bby;
-			bbx = bx;  // ÃÊ±âÈ­°¡ ¾øÀ¸¸é Ã¹ rButtonDown¿¡¼­ ¼³Á¤ÇÑ bbx°ªÀ» °è¼Ó °¡Á®¿À°Ô µÊ!
+			bbx = bx;  // ì´ˆê¸°í™”ê°€ ì—†ìœ¼ë©´ ì²« rButtonDownì—ì„œ ì„¤ì •í•œ bbxê°’ì„ ê³„ì† ê°€ì ¸ì˜¤ê²Œ ë¨!
 			bby = by;
 
 
@@ -668,7 +652,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				endPointCube.x += dx;
 				endPointCube.y += dy;
 
-				InvalidateRect(hwnd, NULL, TRUE); // Ã¢À» ´Ù½Ã ±×¸³´Ï´Ù.
+				InvalidateRect(hwnd, NULL, TRUE); // ì°½ì„ ë‹¤ì‹œ ê·¸ë¦½ë‹ˆë‹¤.
 
 				/*startPointCube.x = bx;
 				startPointCube.y = by;*/
@@ -693,13 +677,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_DRAW_MODE) {
 			endPointCube.x = LOWORD(lParam);
 			endPointCube.y = HIWORD(lParam);
-			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT È£Ãâ
+			InvalidateRect(hwnd, NULL, TRUE); // WM_PAINT í˜¸ì¶œ
 		}
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_RESIZE_MODE) {
 			POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
 			POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
 
-			// µå·¡±× ¹æÇâÀ» ±âÁØÀ¸·Î ÆòÇà Åõ¿µ¿¡ ´ëÇÑ ¿ÀÇÁ¼Â °è»ê -> ½ÃÀÛÆ÷ÀÎÆ®º¸´Ù Á¾·áÆ÷ÀÎÆ®°¡ ´õ ÀÛÀº °æ¿ìµµ ÀÖÀ¸´Ï±î
+			// ë“œë˜ê·¸ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ í‰í–‰ íˆ¬ì˜ì— ëŒ€í•œ ì˜¤í”„ì…‹ ê³„ì‚° -> ì‹œì‘í¬ì¸íŠ¸ë³´ë‹¤ ì¢…ë£Œí¬ì¸íŠ¸ê°€ ë” ì‘ì€ ê²½ìš°ë„ ìˆìœ¼ë‹ˆê¹Œ
 			const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
 			const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
 
@@ -717,18 +701,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			POINT topFace[4] = { cubePoints[0], cubePoints[1], cubePoints[5], cubePoints[4] };
 			POINT rightFace[4] = { cubePoints[1], cubePoints[2], cubePoints[6], cubePoints[5] };
 
-			
+
 			int currentX = LOWORD(lParam);
 			int currentY = HIWORD(lParam);
 
-			int dx = currentX - startPointCube.x; // xÃà º¯È­·®
+			int dx = currentX - startPointCube.x; // xì¶• ë³€í™”ëŸ‰
 
-			// »óÀÚ Å©±â Á¶Á¤ ·ÎÁ÷
+			// ìƒì í¬ê¸° ì¡°ì • ë¡œì§
 			if (dx != 0) {
-				//double scaleFactor = 1 + (dx / 100.0); // ¿¹: µå·¡±×·Î 100px ÀÌµ¿½Ã 2¹è Áõ°¡
+				//double scaleFactor = 1 + (dx / 100.0); // ì˜ˆ: ë“œë˜ê·¸ë¡œ 100px ì´ë™ì‹œ 2ë°° ì¦ê°€
 				//double scaleFactor = max(0.1, 1.0 + (dx / 100.0));
 				for (int i = 0; i < 8; ++i) {
-					// Àü¸éÀÇ »óÀÚ Á¡µéÀ» Á¶Á¤
+					// ì „ë©´ì˜ ìƒì ì ë“¤ì„ ì¡°ì •
 
 
 					switch (i) {
@@ -765,12 +749,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						cubePoints[i].y = (int)(cubePoints[i].y + dx);
 						break;
 					}
-					
-		
-				
 
-					// ¿·¸éÀÇ »óÀÚ Á¡µé¿¡ ´ëÇÑ Á¶Á¤µµ Ãß°¡
-					// ÆòÇà»çº¯ÇüÀÇ ¼öÁ÷ º¯Àº °íÁ¤µÇ°í, ¼öÆò º¯¸¸ scaleFactor¿¡ µû¶ó º¯µ¿µÇ¾î¾ß ÇÔ
+
+
+
+					// ì˜†ë©´ì˜ ìƒì ì ë“¤ì— ëŒ€í•œ ì¡°ì •ë„ ì¶”ê°€
+					// í‰í–‰ì‚¬ë³€í˜•ì˜ ìˆ˜ì§ ë³€ì€ ê³ ì •ë˜ê³ , ìˆ˜í‰ ë³€ë§Œ scaleFactorì— ë”°ë¼ ë³€ë™ë˜ì–´ì•¼ í•¨
 				}
 
 				/*
@@ -780,41 +764,41 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				int initialWidth = endPointCube.x - startPointCube.x;
 				int initialHeight = endPointCube.y - startPointCube.y;
 
-				int dx = currentX - startPointCube.x; // xÃà º¯È­·®
+				int dx = currentX - startPointCube.x; // xì¶• ë³€í™”ëŸ‰
 				int dy = currentY - startPointCube.y;
 
 				double scaleX = (initialWidth + dx) / (double)initialWidth;
 				double scaleY = (initialHeight + dy) / (double)initialHeight;
 
-				// »óÀÚ Å©±â Á¶Á¤ ·ÎÁ÷
+				// ìƒì í¬ê¸° ì¡°ì • ë¡œì§
 				if (dx != 0) {
 					for (int i = 0; i < 8; ++i) {
-						int originalX = (i < 4) ? startPointCube.x : (startPointCube.x + offset_x); // Àü¸é°ú ¿·¸é Á¡µéÀÇ ¿ø·¡ x À§Ä¡
-						int originalY = (i % 4 == 0 || i % 4 == 3) ? startPointCube.y : (startPointCube.y + offset_y); // Àü¸é°ú ¿·¸é Á¡µéÀÇ ¿ø·¡ y À§Ä¡
+						int originalX = (i < 4) ? startPointCube.x : (startPointCube.x + offset_x); // ì „ë©´ê³¼ ì˜†ë©´ ì ë“¤ì˜ ì›ë˜ x ìœ„ì¹˜
+						int originalY = (i % 4 == 0 || i % 4 == 3) ? startPointCube.y : (startPointCube.y + offset_y); // ì „ë©´ê³¼ ì˜†ë©´ ì ë“¤ì˜ ì›ë˜ y ìœ„ì¹˜
 
-						// Á¡ À§Ä¡ Á¶Á¤
+						// ì  ìœ„ì¹˜ ì¡°ì •
 						cubePoints[i].x = startPointCube.x + (int)((cubePoints[i].x - originalX) * scaleX);
 						cubePoints[i].y = startPointCube.y + (int)((cubePoints[i].y - originalY) * scaleY);
 					}
-				
 
-					// ¿·¸éÀÇ »óÀÚ Á¡µé¿¡ ´ëÇÑ Á¶Á¤µµ Ãß°¡
-					// ÆòÇà»çº¯ÇüÀÇ ¼öÁ÷ º¯Àº °íÁ¤µÇ°í, ¼öÆò º¯¸¸ scaleFactor¿¡ µû¶ó º¯µ¿µÇ¾î¾ß ÇÔ
+
+					// ì˜†ë©´ì˜ ìƒì ì ë“¤ì— ëŒ€í•œ ì¡°ì •ë„ ì¶”ê°€
+					// í‰í–‰ì‚¬ë³€í˜•ì˜ ìˆ˜ì§ ë³€ì€ ê³ ì •ë˜ê³ , ìˆ˜í‰ ë³€ë§Œ scaleFactorì— ë”°ë¼ ë³€ë™ë˜ì–´ì•¼ í•¨
 				}
 				*/
-			
 
-				//startPointCube.x = currentX; // µå·¡±× ½ÃÀÛ À§Ä¡ ¾÷µ¥ÀÌÆ®
+
+				//startPointCube.x = currentX; // ë“œë˜ê·¸ ì‹œì‘ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 				//startPointCube.y = currentY; 
 
-				InvalidateRect(hwnd, NULL, TRUE); // È­¸é °»½Å
+				InvalidateRect(hwnd, NULL, TRUE); // í™”ë©´ ê°±ì‹ 
 			}
-	
-	
+
+
 		}
 
-	
-		
+
+
 		hdc = (HDC)wParam;   // ì „ì²´ gui RECTì˜ í¬ê¸°ë¥¼ ê°€ì ¸ì˜´
 		RECT rect;
 		GetClientRect(hwnd, &rect);
@@ -888,25 +872,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		}
 
-<<<<<<< HEAD
 		else if (isMouseLButtonPressed && isMouseOnDrawingBox && isDrawingCube && CUBE_DRAW_MODE)
 		{
-=======
-
-		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
-
-			// í˜„ì¬ ìƒíƒœì— ë”°ë¼ ë„í˜•ì„ ê·¸ë¦´ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
->>>>>>> 261dcef258f61636d46f713d9a2618932561a998
 			DrawShape(hwnd, hdc);
 		}
 
 		else if ((isMouseLButtonPressed || isMouseRButtonPressed) && isMouseOnDrawingBox && isDrawingCube && CUBE_RESIZE_MODE) {
-			
-			// ÀÛÀº ÁÂÇ¥¸¦ startPoint·Î ¼öÁ¤
+
+			// ì‘ì€ ì¢Œí‘œë¥¼ startPointë¡œ ìˆ˜ì •
 			POINT startPoint = { min(startPointCube.x, endPointCube.x), min(startPointCube.y, endPointCube.y) };
 			POINT endPoint = { max(startPointCube.x, endPointCube.x), max(startPointCube.y, endPointCube.y) };
 
-			// µå·¡±× ¹æÇâÀ» ±âÁØÀ¸·Î ÆòÇà Åõ¿µ¿¡ ´ëÇÑ ¿ÀÇÁ¼Â °è»ê -> ½ÃÀÛÆ÷ÀÎÆ®º¸´Ù Á¾·áÆ÷ÀÎÆ®°¡ ´õ ÀÛÀº °æ¿ìµµ ÀÖÀ¸´Ï±î
+			// ë“œë˜ê·¸ ë°©í–¥ì„ ê¸°ì¤€ìœ¼ë¡œ í‰í–‰ íˆ¬ì˜ì— ëŒ€í•œ ì˜¤í”„ì…‹ ê³„ì‚° -> ì‹œì‘í¬ì¸íŠ¸ë³´ë‹¤ ì¢…ë£Œí¬ì¸íŠ¸ê°€ ë” ì‘ì€ ê²½ìš°ë„ ìˆìœ¼ë‹ˆê¹Œ
 			const int offset_x = (startPoint.x <= endPoint.x) ? 30 : -30;
 			const int offset_y = (startPoint.y <= endPoint.y) ? -30 : 30;
 
@@ -942,12 +919,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(hBrush); // Don't forget to delete the brush
 		}
 
-		//else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
+		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingBox) {
 
-		//	// ÇöÀç »óÅÂ¿¡ µû¶ó µµÇüÀ» ±×¸± ¼ö ÀÖ½À´Ï´Ù.
-		//	DrawShape(hwnd, hdc);
-		//}
-		
+			// í˜„ì¬ ìƒíƒœì— ë”°ë¼ ë„í˜•ì„ ê·¸ë¦´ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+			DrawShape(hwnd, hdc);
+		}
+
 		else if (isMouseRButtonPressed && isMouseOnDrawingBox && isDrawingCircle) {
 			HBRUSH hBrushCircle = CreateSolidBrush(RGB(255, 216, 190));
 			HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrushCircle);
@@ -966,9 +943,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 
 		// ë³´ë…¸ë³´ë…¸
-		else if (isDrawingBonobono) {  
+		else if (isDrawingBonobono) {
 			HBRUSH Bono1 = CreateSolidBrush(RGB(127, 200, 255));
-			HBRUSH OldBrush1 = (HBRUSH)SelectObject(hdc, Bono1);  
+			HBRUSH OldBrush1 = (HBRUSH)SelectObject(hdc, Bono1);
 			Ellipse(hdc, 280, 115, 520, 355);
 			SelectObject(hdc, OldBrush1);
 			DeleteObject(Bono1);
@@ -1009,17 +986,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				MoveToEx(hdc, 468, 239, NULL);
 				LineTo(hdc, 485, 252);
 			}
-			else if (!BonobonoSwitch){
-				
+			else if (!BonobonoSwitch) {
+
 				Ellipse(hdc, 311, 216, 323, 235);
 				Ellipse(hdc, 480, 216, 492, 235);
 
-				HBRUSH Bono4 = CreateSolidBrush(RGB(255, 255, 255));
-				HBRUSH OldBrush4 = (HBRUSH)SelectObject(hdc, Bono4);
 				Ellipse(hdc, 314, 222, 320, 228);
 				Ellipse(hdc, 483, 222, 489, 228);
-				SelectObject(hdc, OldBrush4);
-				DeleteObject(Bono4);
 			}
 			SelectObject(hdc, OldBrush3);
 			DeleteObject(Bono3);
